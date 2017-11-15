@@ -1,37 +1,58 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"image/png"
+	"io"
+	"log"
 	"os"
+
+	"flag"
 
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
 )
 
 func main() {
-	// cli
 	if len(os.Args) == 1 {
-		fmt.Printf("Usage: %v Data\n", os.Args[0])
+		fmt.Printf("Usage: %v -h\n", os.Args[0])
 		os.Exit(1)
 	} else {
-		// data for barcode
-		var strData string
-		for k, v := range os.Args[1:] {
-			if k != len(os.Args[1:])-1 {
-				strData += v + " "
-			} else {
-				strData += v
-			}
+		// parse flags
+		fVcardOpen := flag.String("o", "", "Open vCard file (all format)")
+		fBarcodeSave := flag.String("s", "", "Get name for save barcode file")
+
+		flag.Parse()
+
+		// need read file
+		// read file as a string
+		fOpen, err := os.Open(*fVcardOpen)
+		if err != nil {
+			log.Fatalf("File open ERROR: %v\n", err)
 		}
-		// Create the barcode
-		qrCode, _ := qr.Encode(strData, qr.M, qr.Auto)
+		defer fOpen.Close()
+		buf := bytes.NewBuffer(nil)
+		io.Copy(buf, fOpen)
+
+		// Create the barcode from data on file open
+		qrCode, err := qr.Encode(string(buf.Bytes()), qr.M, qr.Auto)
+		if err != nil {
+			log.Fatalf("Create the barcode ERROR: %v\n", err)
+		}
 
 		// Scale the barcode to 200x200 pixels
-		qrCode, _ = barcode.Scale(qrCode, 200, 200)
+		qrCode, err = barcode.Scale(qrCode, 200, 200)
+		if err != nil {
+			log.Fatalf("Scale the barcode ERROR: %v\n", err)
+		}
 
 		// create the output file
-		file, _ := os.Create("qrcode.png")
+		// format png
+		file, err := os.Create(*fBarcodeSave + ".png")
+		if err != nil {
+			log.Fatalf("File save ERROR: %v\n", err)
+		}
 		defer file.Close()
 
 		// encode the barcode as png

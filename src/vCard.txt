@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Solovev;Viktor;Vladimirovich
+BDAY:1986-04-24T14:00:00Z
+TEL;TYPE=cell, voice, pref, msg:+7-977-824-65-44
+EMAIL;TYPE=INTERNET:viktor.vladimirovich.solovev@gmail.com
+TITLE:Deputy Head of Department - Head of Laboratory
+ORG:16 Central Research and Testing Institute
+REV:2017-11-15
+URL:https://dreddsa5dies.github.io
+CLASS:PRIVATE
+END:VCARD

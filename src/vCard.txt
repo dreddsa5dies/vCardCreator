@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:майор Соловьев В.В.
+N:Соловьев;Виктор;Владимирович
+ORG:ФГБУ "16 ЦНИИИ" Минобороны России
+URL:https://dreddsa5dies.github.io
+EMAIL;TYPE=INTERNET:viktor.vladimirovich.solovev@gmail.com
+TEL;TYPE=cell, voice, pref, msg:+7-977-824-65-44
+TITLE:Deputy Head of Department - Head of Laboratory
+BDAY:1986-04-24
+REV:12017-11-15
+CLASS:PRIVATE
+END:VCARD

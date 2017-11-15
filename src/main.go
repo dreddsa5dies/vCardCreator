@@ -1,40 +1,55 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
 	"image/png"
+	"io"
+	"log"
 	"os"
+
+	flags "github.com/jessevdk/go-flags"
 
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
 )
 
+var opts struct {
+	fVcardOpen   string `short:"o" long:"open" default:"vCard.txt" description:"open vCard file"`
+	fBarcodeSave string `short:"s" long:"save" default:"vCard.png" description:"save barcode file"`
+}
+
 func main() {
-	// cli
-	if len(os.Args) == 1 {
-		fmt.Printf("Usage: %v Data\n", os.Args[0])
-		os.Exit(1)
-	} else {
-		// data for barcode
-		var strData string
-		for k, v := range os.Args[1:] {
-			if k != len(os.Args[1:])-1 {
-				strData += v + " "
-			} else {
-				strData += v
-			}
-		}
-		// Create the barcode
-		qrCode, _ := qr.Encode(strData, qr.M, qr.Auto)
+	// parse flags
+	flags.Parse(&opts)
 
-		// Scale the barcode to 200x200 pixels
-		qrCode, _ = barcode.Scale(qrCode, 200, 200)
-
-		// create the output file
-		file, _ := os.Create("qrcode.png")
-		defer file.Close()
-
-		// encode the barcode as png
-		png.Encode(file, qrCode)
+	// need read file
+	fOpen, err := os.Open(opts.fVcardOpen)
+	if err != nil {
+		log.Printf("File open ERROR: %v\n", err)
 	}
+	defer fOpen.Close()
+	buf := bytes.NewBuffer(nil)
+	io.Copy(buf, fOpen)
+
+	// Create the barcode from data on file open
+	qrCode, err := qr.Encode(string(buf.Bytes()), qr.M, qr.Auto)
+	if err != nil {
+		log.Printf("Create the barcode ERROR: %v\n", err)
+	}
+
+	// Scale the barcode to 200x200 pixels
+	qrCode, err = barcode.Scale(qrCode, 200, 200)
+	if err != nil {
+		log.Printf("Scale the barcode ERROR: %v\n", err)
+	}
+
+	// create the output file
+	file, err := os.Create(opts.fBarcodeSave)
+	if err != nil {
+		log.Printf("File save ERROR: %v\n", err)
+	}
+	defer file.Close()
+
+	// encode the barcode as png
+	png.Encode(file, qrCode)
 }

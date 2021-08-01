@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/dreddsa5dies/vCardCreator)](https://goreportcard.com/report/github.com/dreddsa5dies/vCardCreator) ![License](https://img.shields.io/aur/license/yaourt.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dreddsa5dies/vCardCreator)](https://goreportcard.com/report/github.com/dreddsa5dies/vCardCreator)
 
 ![IMAGE](img/qrcode.png)
 
